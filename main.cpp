@@ -4,18 +4,48 @@
 using namespace std;
 
 int main() {
-	cout << "Hello: atcoder/twosat!" << "\n";
-	atcoder::two_sat ts(10);
+	ios::sync_with_stdio(false);
 
-	ts.add_clause(0, false, 1, false);
-	ts.add_clause(1, true, 2, true);
-	ts.add_clause(0, true, 0, true);
-	cout << "ts.satisfiable = " << ts.satisfiable() << "\n";
+	int rooms, switches;
+	cin >> rooms >> switches;
 
-	const vector<bool> ans = ts.answer();
-	for (int i = 0; i < ans.size(); ++i) {
-		cout << "ans[" << i << "] = " << ans[i] << "\n";
+	vector<bool> unlocked(rooms, false);
+	for (int i = 0; i < rooms; ++i) {
+		int s;
+		cin >> s;
+		unlocked[i] = (s != 0);
 	}
 
+	vector<vector<int>> controlBy(rooms, vector<int>());
+	for (int i = 0; i < switches; ++i) {
+		int cnt;
+		cin >> cnt;
+		for (int j = 0; j < cnt; ++j) {
+			int r;
+			cin >> r;
+			r -= 1;
+			controlBy[r].emplace_back(i);
+		}
+	}
+
+	atcoder::two_sat ts(switches);
+	for (int i = 0; i < rooms; ++i) {
+		int x = controlBy[i][0];
+		int y = controlBy[i][1];
+		if (unlocked[i]) {
+			ts.add_clause(x, true, y, false);
+			ts.add_clause(x, false, y, true);
+		} else {
+			ts.add_clause(x, true, y, true);
+			ts.add_clause(x, false, y, false);
+		}
+	}
+
+	bool ok = ts.satisfiable();
+	if (ok) {
+		cout << "YES" << "\n";
+	} else {
+		cout << "NO" << "\n";
+	}
 	return 0;
 }

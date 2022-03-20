@@ -1,5 +1,15 @@
 # cp-algorithms
 
+## Before submit
+
+Run:
+
+```shell
+$ ./ac-library/expander.py main.cpp --lib ac-library
+```
+
+, then submit `combined.cpp`.
+
 ## Submodules
 
 `.gitmodules` is a generated file for configuring GIT submodules, so don't casually modify it for no reason.
